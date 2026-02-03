@@ -1,0 +1,58 @@
+# =============================================================================
+# TECH CHALLENGE 4 - LSTM VALE3
+# Dependências do Projeto
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# COLETA E MANIPULAÇÃO DE DADOS
+# -----------------------------------------------------------------------------
+yfinance>=0.2.36          # API para baixar dados do Yahoo Finance
+pandas>=2.0.0             # Manipulação de dados tabulares (DataFrames)
+numpy>=1.24.0             # Computação numérica (arrays, operações matemáticas)
+
+# -----------------------------------------------------------------------------
+# MACHINE LEARNING E DEEP LEARNING
+# -----------------------------------------------------------------------------
+scikit-learn>=1.3.0       # Preprocessamento (MinMaxScaler, train_test_split)
+tensorflow>=2.15.0        # Framework de Deep Learning (inclui Keras)
+# Nota: TensorFlow já inclui Keras integrado desde v2.0
+
+# -----------------------------------------------------------------------------
+# VISUALIZAÇÃO
+# -----------------------------------------------------------------------------
+matplotlib>=3.7.0         # Gráficos estáticos (linha, scatter, etc.)
+seaborn>=0.12.0           # Gráficos estatísticos (heatmaps, distribuições)
+plotly>=5.18.0            # Gráficos interativos (opcional, para dashboards)
+
+# -----------------------------------------------------------------------------
+# API E DEPLOY
+# -----------------------------------------------------------------------------
+fastapi>=0.109.0          # Framework web moderno e rápido
+uvicorn>=0.27.0           # Servidor ASGI para rodar FastAPI localmente
+mangum>=0.17.0            # Adapter para rodar FastAPI no AWS Lambda
+python-multipart>=0.0.6   # Upload de arquivos no FastAPI
+pydantic>=2.5.0           # Validação de dados (já vem com FastAPI)
+
+# -----------------------------------------------------------------------------
+# AWS SDK
+# -----------------------------------------------------------------------------
+boto3>=1.34.0             # SDK da AWS para Python (S3, Lambda, etc.)
+
+# -----------------------------------------------------------------------------
+# DESENVOLVIMENTO E NOTEBOOKS
+# -----------------------------------------------------------------------------
+jupyter>=1.0.0            # Jupyter Notebooks
+ipykernel>=6.28.0         # Kernel Python para Jupyter
+tqdm>=4.66.0              # Barras de progresso bonitas
+
+# -----------------------------------------------------------------------------
+# TESTES E QUALIDADE
+# -----------------------------------------------------------------------------
+pytest>=7.4.0             # Framework de testes
+pytest-cov>=4.1.0         # Cobertura de testes
+
+# -----------------------------------------------------------------------------
+# UTILITÁRIOS
+# -----------------------------------------------------------------------------
+python-dotenv>=1.0.0      # Carregar variáveis de ambiente de .env
+joblib>=1.3.0             # Salvar/carregar objetos Python (scalers, etc.)

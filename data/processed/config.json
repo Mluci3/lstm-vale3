@@ -1,0 +1,16 @@
+{
+  "janela_temporal": 60,
+  "coluna_alvo": "Close",
+  "train_ratio": 0.8,
+  "val_ratio": 0.1,
+  "test_ratio": 0.1,
+  "n_train": 948,
+  "n_val": 118,
+  "n_test": 119,
+  "input_shape": [
+    60,
+    1
+  ],
+  "scaler_min": 42.37786483764648,
+  "scaler_max": 82.5
+}

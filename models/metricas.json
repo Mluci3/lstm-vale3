@@ -1,0 +1,31 @@
+{
+  "treino": {
+    "mae_normalizado": 0.036629315576689726,
+    "rmse_normalizado": 0.04881528279434302,
+    "mape": 13.493390795833765,
+    "mae_reais": 1.4696463049715582,
+    "rmse_reais": 1.9585733239535548
+  },
+  "validacao": {
+    "mae_normalizado": 0.027147007994546193,
+    "rmse_normalizado": 0.035755572416310825,
+    "mape": 17.0266095940314,
+    "mae_reais": 1.0891963182869602,
+    "rmse_reais": 1.434590272742889
+  },
+  "teste": {
+    "mae_normalizado": 0.03658898679185548,
+    "rmse_normalizado": 0.04626640110949452,
+    "mape": 7.855036338338925,
+    "mae_reais": 1.4680281246409697,
+    "rmse_reais": 1.8563068314224866
+  },
+  "hiperparametros": {
+    "lstm_units_1": 50,
+    "lstm_units_2": 50,
+    "dropout_rate": 0.2,
+    "epochs_executados": 35,
+    "batch_size": 32,
+    "learning_rate": 0.001
+  }
+}

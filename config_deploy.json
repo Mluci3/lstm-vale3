@@ -1,0 +1,9 @@
+{
+  "aws_account_id": "299579972912",
+  "aws_region": "sa-east-1",
+  "ecr_repo_name": "lstm-vale3-api",
+  "ecr_uri": "299579972912.dkr.ecr.sa-east-1.amazonaws.com/lstm-vale3-api",
+  "lambda_function_name": "lstm-vale3-predict",
+  "lambda_timeout": 60,
+  "lambda_memory": 1024
+}
