@@ -60,15 +60,15 @@ data/processed/*.npy
 # Mantemos a estrutura de pastas
 !data/raw/.gitkeep
 !data/processed/.gitkeep
-
+notebooks/Lembrete.md
 # -----------------------------------------------------------------------------
 # Modelos Treinados (muito grandes para Git)
 # -----------------------------------------------------------------------------
 models/*.keras
-models/*.h5
-models/*.pkl
-models/*.joblib
-!models/.gitkeep
+# models/*.h5
+# models/*.pkl
+# models/*.joblib
+# !models/.gitkeep
 
 # -----------------------------------------------------------------------------
 # AWS e Credenciais
