@@ -10,16 +10,21 @@ Endpoints:
 """
 
 from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel, Field
+from fastapi.concurrency import run_in_threadpool
+from pydantic import BaseModel, Field, ConfigDict
 from typing import List, Optional
 import numpy as np
 import tensorflow as tf
 import joblib
 import json
 import os
+import logging
 from datetime import datetime, timedelta
 import yfinance as yf
 import pandas as pd
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 # =============================================================================
 # CONFIGURAÇÃO DE CAMINHOS
@@ -54,7 +59,7 @@ app = FastAPI(
 # CARREGAMENTO DO MODELO (uma única vez na inicialização)
 # =============================================================================
 
-print(f"Carregando modelo de: {MODEL_PATH}")
+logger.info(f"Carregando modelo de: {MODEL_PATH}")
 
 try:
     modelo = tf.keras.models.load_model(MODEL_PATH)
@@ -67,9 +72,9 @@ try:
         metricas = json.load(f)
 
     MODELO_CARREGADO = True
-    print("✓ Modelo carregado com sucesso!")
+    logger.info("Modelo carregado com sucesso!")
 except Exception as e:
-    print(f"✗ Erro ao carregar modelo: {e}")
+    logger.error(f"Erro ao carregar modelo: {e}")
     MODELO_CARREGADO = False
     modelo = None
     scaler = None
@@ -85,16 +90,17 @@ class PrecosInput(BaseModel):
     precos: List[float] = Field(
         ...,
         description="Lista com os últimos 60 preços de fechamento em R$",
-        min_items=60,
-        max_items=60
+        min_length=60,
+        max_length=60
     )
 
-    class Config:
-        schema_extra = {
+    model_config = ConfigDict(
+        json_schema_extra={
             "example": {
                 "precos": [55.0 + i * 0.1 for i in range(60)]
             }
         }
+    )
 
 class PrevisaoOutput(BaseModel):
     """Schema para saída da previsão."""
@@ -258,8 +264,8 @@ async def predict_latest(ticker: str = "VALE3.SA"):
 
     Este endpoint busca automaticamente os últimos 60 dias de dados.
     """
-    # Busca dados
-    dados = buscar_dados_recentes(ticker, config['janela_temporal'])
+    # Busca dados (executa em threadpool para não bloquear o event loop)
+    dados = await run_in_threadpool(buscar_dados_recentes, ticker, config['janela_temporal'])
 
     # Faz previsão
     resultado = fazer_previsao(dados['precos'])
