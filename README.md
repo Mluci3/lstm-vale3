@@ -1,5 +1,7 @@
 # 📈 Tech Challenge 4 - Previsão de Preços VALE3 com LSTM
 
+[![CI](https://github.com/Mluci3/lstm-vale3/actions/workflows/ci.yml/badge.svg)](https://github.com/Mluci3/lstm-vale3/actions/workflows/ci.yml)
+
 ## Descrição
 
 API para previsão de preços de fechamento das ações da VALE3 utilizando redes neurais LSTM (Long Short-Term Memory). O projeto contempla toda a pipeline de desenvolvimento, desde a coleta de dados até o deploy em produção na AWS.
