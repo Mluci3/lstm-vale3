@@ -6,7 +6,7 @@ API para previsão de preços de fechamento das ações da VALE3 utilizando rede
 
 **🔗 API em Produção:** https://6qvbjbl3ie.execute-api.sa-east-1.amazonaws.com
 
-> ⚠️ **Nota sobre cold start:** a API roda em AWS Lambda com container Docker (TensorFlow completo). Se ficar sem receber requisições por um tempo, as primeiras chamadas após esse período podem **retornar erro `503 Service Unavailable`** enquanto o container reinicializa e carrega o modelo — o cold start ultrapassa o limite de 30s do API Gateway. **Isso é esperado: basta repetir a chamada algumas vezes.** Após o container "esquentar" (normalmente na 2ª ou 3ª tentativa), as respostas voltam a sair em menos de 100ms. Ou seja, um `503` nas primeiras tentativas não significa que a API esteja fora do ar — tente de novo.
+> ⚠️ **Nota sobre cold start:** a API roda em AWS Lambda com container Docker (TensorFlow completo). Se ficar sem receber requisições por um tempo, a primeira chamada após esse período leva cerca de **8 a 10 segundos** (cold start: o container sobe e carrega o modelo). As chamadas seguintes respondem em menos de 100ms. A função foi configurada com memória suficiente (3 GB) para que esse cold start fique bem abaixo do limite de 30s do API Gateway.
 
 ---
 
