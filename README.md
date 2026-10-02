@@ -137,6 +137,9 @@ lstm-vale3/
 │   └── api/
 │       ├── __init__.py
 │       └── main.py             # API FastAPI
+├── assets/                     # Imagens do README (ex: previsao_vs_real.png)
+├── tests/                      # Testes automatizados (pytest)
+├── .github/workflows/ci.yml    # CI no GitHub Actions
 ├── Dockerfile
 ├── requirements.txt
 └── README.md
@@ -265,7 +268,10 @@ Cliente → API Gateway → Lambda (Container) → ECR (Imagem Docker)
 ## 📊 Resultados
 
 ### Previsão vs Real (Conjunto de Teste)
-O modelo consegue capturar a tendência geral dos preços, com erro médio de R$ 1,17 — mas, como a seção de comparação com baseline acima mostra, ainda fica atrás da estratégia ingênua de repetir o último preço conhecido.
+
+![Previsão vs Real no conjunto de teste](assets/previsao_vs_real.png)
+
+O modelo consegue capturar a tendência geral dos preços, com erro médio de R$ 1,17 — mas, como a seção de comparação com baseline acima mostra, ainda fica atrás da estratégia ingênua de repetir o último preço conhecido. No gráfico, a linha do LSTM (vermelho) segue a tendência, porém costuma ficar ligeiramente abaixo do real nas subidas, enquanto o baseline (tracejado) praticamente se sobrepõe à série real.
 
 ### Interpretação das Métricas
 - **MAE (R$ 1,17):** Em média, o modelo erra R$ 1,17 para cima ou para baixo
@@ -306,7 +312,7 @@ O modelo consegue capturar a tendência geral dos preços, com erro médio de R$
 
 ## 👩‍💻 Autora
 
-**Maria Araujo**
+**Maria Araujo** · [LinkedIn](https://www.linkedin.com/in/maria-lucilene-faacocella/)
 
 ---
 
