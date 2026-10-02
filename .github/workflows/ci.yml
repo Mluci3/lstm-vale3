@@ -26,7 +26,9 @@ jobs:
           # Mesmas versões usadas no deploy (Lambda/Docker)
           pip install -r requirements-deploy.txt
           # Dependências só de teste
-          pip install pytest httpx
+          # httpx < 0.28: o TestClient do FastAPI 0.109 ainda passa app= ao
+          # httpx, argumento removido no httpx 0.28+ (quebraria a coleta).
+          pip install pytest "httpx<0.28"
 
       - name: Rodar testes
         run: pytest
