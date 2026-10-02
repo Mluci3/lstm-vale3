@@ -130,7 +130,10 @@ lstm-vale3/
 │   ├── 03_modelo_lstm.ipynb
 │   ├── 04_api_fastapi.ipynb
 │   └── 05_deploy_aws.ipynb
-├── src/
+├── src/                        # Lógica reutilizável (fora dos notebooks)
+│   ├── data_processing.py      # Coleta, normalização, sequências e split temporal
+│   ├── model.py                # Arquitetura e treino do LSTM
+│   ├── evaluate.py             # Métricas em R$ e baseline de persistência
 │   └── api/
 │       ├── __init__.py
 │       └── main.py             # API FastAPI
@@ -138,6 +141,8 @@ lstm-vale3/
 ├── requirements.txt
 └── README.md
 ```
+
+> **Organização do código:** a lógica central (dados, modelo e avaliação) vive em módulos Python em `src/`, reutilizáveis e testáveis. Os notebooks em `notebooks/` servem à exploração e à narrativa passo a passo, mas a implementação de referência está em `src/`.
 
 ---
 
