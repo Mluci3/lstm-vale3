@@ -28,4 +28,8 @@ COPY models/metricas.json ${LAMBDA_TASK_ROOT}/models/
 RUN mkdir -p ${LAMBDA_TASK_ROOT}/data/processed
 COPY data/processed/config.json ${LAMBDA_TASK_ROOT}/data/processed/
 
+# Garante que os arquivos copiados sejam legíveis pelo usuário não-root do
+# Lambda (os arquivos de origem podem ter permissão 0600 no host).
+RUN chmod -R a+rX ${LAMBDA_TASK_ROOT}/src ${LAMBDA_TASK_ROOT}/models ${LAMBDA_TASK_ROOT}/data
+
 CMD ["src.api.main.handler"]

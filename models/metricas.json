@@ -1,30 +1,35 @@
 {
   "treino": {
-    "mae_normalizado": 0.036629315576689726,
-    "rmse_normalizado": 0.04881528279434302,
-    "mape": 13.493390795833765,
-    "mae_reais": 1.4696463049715582,
-    "rmse_reais": 1.9585733239535548
+    "mae_normalizado": 0.04076368684594044,
+    "rmse_normalizado": 0.054625558199411874,
+    "mape": 2.2117726976829175,
+    "mae_reais": 1.2493010573246308,
+    "rmse_reais": 1.6741313951742012
   },
   "validacao": {
-    "mae_normalizado": 0.027147007994546193,
-    "rmse_normalizado": 0.035755572416310825,
-    "mape": 17.0266095940314,
-    "mae_reais": 1.0891963182869602,
-    "rmse_reais": 1.434590272742889
+    "mae_normalizado": 0.031223596405216478,
+    "rmse_normalizado": 0.04131519397077455,
+    "mape": 1.9374923099274934,
+    "mae_reais": 0.9569223694882151,
+    "rmse_reais": 1.2662035909453941
   },
   "teste": {
-    "mae_normalizado": 0.03658898679185548,
-    "rmse_normalizado": 0.04626640110949452,
-    "mape": 7.855036338338925,
-    "mae_reais": 1.4680281246409697,
-    "rmse_reais": 1.8563068314224866
+    "mae_normalizado": 0.03823946362326509,
+    "rmse_normalizado": 0.050088207759977854,
+    "mape": 1.8377947486080872,
+    "mae_reais": 1.1719396254595589,
+    "rmse_reais": 1.5350730773989052
+  },
+  "baseline_naive_teste": {
+    "mae_reais": 0.5106638419527966,
+    "rmse_reais": 0.7733710852942967,
+    "mape": 0.8051845640503871
   },
   "hiperparametros": {
     "lstm_units_1": 50,
     "lstm_units_2": 50,
     "dropout_rate": 0.2,
-    "epochs_executados": 35,
+    "epochs_executados": 56,
     "batch_size": 32,
     "learning_rate": 0.001
   }

@@ -508,13 +508,32 @@ def preparar_dados_completo(
     
     # 3. Extrai preço de fechamento
     precos = df['Close'].values
-    
+
     # 4. Normalização
-    precos_norm, scaler = normalizar_dados(precos)
-    
+    # IMPORTANTE: o scaler só pode "ver" os dias que pertencem ao treino.
+    # Ajustá-lo na série inteira vaza informação do futuro (val/teste) para
+    # dentro da escala usada no treino. Calculamos aqui o mesmo corte de
+    # treino que dividir_dados_temporal() usaria sobre as sequências, e
+    # ajustamos (fit) o scaler só nos dias até esse corte. Depois disso,
+    # aplicamos (transform) esse scaler na série inteira, exatamente como
+    # faríamos com dados novos chegando no futuro.
+    n_total_sequencias = len(precos) - janela
+    n_train_sequencias = int(n_total_sequencias * CONFIG['train_ratio'])
+    corte_treino = janela + n_train_sequencias
+
+    precos_treino, scaler = normalizar_dados(precos[:corte_treino], salvar_scaler=False)
+    precos_norm = scaler.transform(precos.reshape(-1, 1))
+
+    os.makedirs('models', exist_ok=True)
+    joblib.dump(scaler, 'models/scaler.joblib')
+    logger.info(
+        f"✓ Scaler ajustado apenas no treino (dias 0 a {corte_treino}) - "
+        f"Min: {scaler.data_min_[0]:.2f}, Max: {scaler.data_max_[0]:.2f}"
+    )
+
     # 5. Criação de sequências
     X, y = criar_sequencias(precos_norm, janela)
-    
+
     # 6. Divisão temporal
     X_train, X_val, X_test, y_train, y_val, y_test = dividir_dados_temporal(X, y)
     

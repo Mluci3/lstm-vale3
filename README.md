@@ -6,6 +6,8 @@ API para previsão de preços de fechamento das ações da VALE3 utilizando rede
 
 **🔗 API em Produção:** https://6qvbjbl3ie.execute-api.sa-east-1.amazonaws.com
 
+> ⚠️ **Nota sobre cold start:** a API roda em AWS Lambda com container Docker (TensorFlow completo). Se ficar sem receber requisições por um tempo, as primeiras chamadas após esse período podem **retornar erro `503 Service Unavailable`** enquanto o container reinicializa e carrega o modelo — o cold start ultrapassa o limite de 30s do API Gateway. **Isso é esperado: basta repetir a chamada algumas vezes.** Após o container "esquentar" (normalmente na 2ª ou 3ª tentativa), as respostas voltam a sair em menos de 100ms. Ou seja, um `503` nas primeiras tentativas não significa que a API esteja fora do ar — tente de novo.
+
 ---
 
 ## 🎯 Objetivos
@@ -22,9 +24,25 @@ API para previsão de preços de fechamento das ações da VALE3 utilizando rede
 
 | Métrica | Valor |
 |---------|-------|
-| **MAE** | R$ 1,47 |
-| **RMSE** | R$ 1,86 |
-| **MAPE** | 7,86% |
+| **MAE** | R$ 1,17 |
+| **RMSE** | R$ 1,54 |
+| **MAPE** | 1,84% |
+
+### Comparação com um baseline ingênuo
+
+Antes de confiar em qualquer modelo de série temporal, vale compará-lo com o baseline mais simples possível: prever que o preço de amanhã é igual ao de hoje ("persistência").
+
+| | MAE | RMSE | MAPE |
+|---|---|---|---|
+| **LSTM** | R$ 1,17 | R$ 1,54 | 1,84% |
+| **Baseline ingênuo** (hoje = previsão de amanhã) | R$ 0,51 | R$ 0,77 | 0,81% |
+
+**O baseline ingênuo bate o LSTM nas três métricas, no conjunto de teste.** Isso não é um bug: é o comportamento esperado ao tentar prever o *nível* do preço de uma ação. Dia a dia, o preço de uma ação se aproxima de um [random walk](https://pt.wikipedia.org/wiki/Passeio_aleat%C3%B3rio) — a melhor estimativa para o valor de amanhã tende a ser o valor de hoje, e qualquer modelo que aprenda a "seguir" a série (em vez de prever a variação) vai naturalmente ficar perto do baseline, mas com um pouco de ruído extra vindo da própria arquitetura.
+
+**O que isso significa na prática:**
+- Para prever o **nível** do preço, o LSTM não agrega valor sobre o baseline ingênuo.
+- Para ser útil de verdade, a próxima iteração deveria prever o **retorno** (variação percentual) em vez do preço absoluto, e ser avaliada por acerto de direção (alta/baixa) e pelo retorno de uma estratégia simulada — não só por erro absoluto de preço.
+- Este projeto documenta esse resultado de forma transparente, em vez de esconder a comparação: entender os limites de um modelo é parte do trabalho.
 
 ---
 
@@ -89,7 +107,7 @@ Input (60 timesteps, 1 feature)
 ## 📁 Estrutura do Projeto
 
 ```
-tech-challenge-4/
+lstm-vale3/
 ├── data/
 │   ├── raw/                    # Dados brutos
 │   └── processed/              # Dados processados
@@ -149,8 +167,8 @@ curl -X POST https://6qvbjbl3ie.execute-api.sa-east-1.amazonaws.com/predict \
   "ultimo_preco": 60.8,
   "variacao_percentual": -1.99,
   "direcao": "baixa",
-  "mae_modelo": 1.47,
-  "mape_modelo": 7.86,
+  "mae_modelo": 1.17,
+  "mape_modelo": 1.84,
   "data_previsao": "2026-02-02T15:36:26.523023",
   "ticker": "VALE3.SA"
 }
@@ -168,8 +186,8 @@ curl -X POST https://6qvbjbl3ie.execute-api.sa-east-1.amazonaws.com/predict \
 
 1. **Clone o repositório:**
 ```bash
-git clone https://github.com/seu-usuario/tech-challenge-4.git
-cd tech-challenge-4
+git clone https://github.com/Mluci3/lstm-vale3.git
+cd lstm-vale3
 ```
 
 2. **Crie o ambiente virtual:**
@@ -242,12 +260,16 @@ Cliente → API Gateway → Lambda (Container) → ECR (Imagem Docker)
 ## 📊 Resultados
 
 ### Previsão vs Real (Conjunto de Teste)
-O modelo consegue capturar a tendência geral dos preços, com erro médio de R$ 1,47.
+O modelo consegue capturar a tendência geral dos preços, com erro médio de R$ 1,17 — mas, como a seção de comparação com baseline acima mostra, ainda fica atrás da estratégia ingênua de repetir o último preço conhecido.
 
 ### Interpretação das Métricas
-- **MAE (R$ 1,47):** Em média, o modelo erra R$ 1,47 para cima ou para baixo
-- **MAPE (7,86%):** O erro representa ~8% do valor da ação
-- **RMSE (R$ 1,86):** Erros maiores são penalizados, indicando consistência
+- **MAE (R$ 1,17):** Em média, o modelo erra R$ 1,17 para cima ou para baixo
+- **MAPE (1,84%):** O erro representa ~1,8% do valor da ação
+- **RMSE (R$ 1,54):** Por elevar os erros ao quadrado antes de tirar a média, penaliza desproporcionalmente os erros grandes — por isso é mais sensível a outliers do que o MAE (RMSE > MAE sugere a presença de alguns erros maiores no meio de erros pequenos)
+
+### Limitações conhecidas
+- **O LSTM não bate o baseline ingênuo** no conjunto de teste (ver comparação acima). Isso é esperado para previsão do nível de preço de uma ação e está documentado de forma transparente, não escondido.
+- O `MinMaxScaler` é ajustado (fit) apenas no conjunto de treino e aplicado (transform) ao restante da série, evitando vazamento de dados do futuro (val/teste) para a escala usada no treino.
 
 ---
 
